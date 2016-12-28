@@ -23,7 +23,7 @@ public class Main {
             System.out.format("Player %d name: ", i);
             String name = scanner.nextLine(); // TODO: Ensure a name is entered
             System.out.format("Player %d symbol: ", i);
-            char symbol = scanner.nextLine().toUpperCase().charAt(0); // TODO: Ensure a character is entered
+            char symbol = scanner.nextLine().toUpperCase().charAt(0); // TODO: Ensure a non-whitespace character is entered
             players[i] = new Player(name, symbol);
             System.out.format("Created player with name %s and symbol %c\n", players[i].getName(), players[i].getSymbol());
             System.out.println();
