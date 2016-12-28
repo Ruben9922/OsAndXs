@@ -19,6 +19,7 @@ public class Main {
         // Create array storing player data, and input names of each player and symbols for each player
         Player[] players = new Player[PLAYER_COUNT];
         for (int i = 0; i < PLAYER_COUNT; i++) {
+            // TODO: Ensure name and symbol are unique
             System.out.format("Player %d name: ", i);
             String name = scanner.nextLine();
             System.out.format("Player %d symbol: ", i);
@@ -27,5 +28,9 @@ public class Main {
             System.out.format("Created player with name %s and symbol %c\n", players[i].getName(), players[i].getSymbol());
             System.out.println();
         }
+
+        // Create then display board
+        Board board = new Board(3, 3);
+        board.display(true);
     }
 }
