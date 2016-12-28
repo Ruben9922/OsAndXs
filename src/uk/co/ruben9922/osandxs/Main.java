@@ -21,16 +21,28 @@ public class Main {
         for (int i = 0; i < PLAYER_COUNT; i++) {
             // TODO: Ensure name and symbol are unique
             System.out.format("Player %d name: ", i);
-            String name = scanner.nextLine();
+            String name = scanner.nextLine(); // TODO: Ensure a name is entered
             System.out.format("Player %d symbol: ", i);
-            char symbol = scanner.nextLine().toUpperCase().charAt(0);
+            char symbol = scanner.nextLine().toUpperCase().charAt(0); // TODO: Ensure a character is entered
             players[i] = new Player(name, symbol);
             System.out.format("Created player with name %s and symbol %c\n", players[i].getName(), players[i].getSymbol());
             System.out.println();
         }
 
+        waitForEnter(scanner, "Press enter to begin...");
+
         // Create then display board
         Board board = new Board(3, 3);
         board.display(true);
+    }
+
+    private static void waitForEnter(Scanner scanner, String prompt) {
+        System.out.print(prompt);
+        scanner.nextLine();
+        System.out.println();
+    }
+
+    private static void waitForEnter(Scanner scanner) {
+        waitForEnter(scanner, "Press enter to continue...");
     }
 }
