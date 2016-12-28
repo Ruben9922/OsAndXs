@@ -33,7 +33,7 @@ public class Main {
 
         // Create then display board
         Board board = new Board(3, 3);
-        board.display(true);
+        board.display();
     }
 
     private static void waitForEnter(Scanner scanner, String prompt) {

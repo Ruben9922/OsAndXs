@@ -8,36 +8,23 @@ public class Board {
         fill(' ');
     }
 
-    public void display(boolean displayLines) {
-        if (displayLines) {
-            int height = board.length;
-            for (int i = 0; i < height; i++) {
-                int rowLength = board[i].length;
-                for (int j = 0; j < rowLength; j++) {
-                    System.out.print(" ");
-                    System.out.print(board[i][j]);
-                    if (j != rowLength - 1) {
-                        System.out.print(" |");
-                    }
-                }
-                System.out.println();
-                if (i != height - 1) {
-                    for (int j = 0; j < rowLength; j++) {
-                        System.out.print("---");
-                        if (j != rowLength - 1) {
-                            System.out.print("+");
-                        }
-                    }
-                    System.out.println();
+    public void display() {
+        int height = board.length;
+        for (int i = 0; i < height; i++) {
+            int rowLength = board[i].length;
+            for (int j = 0; j < rowLength; j++) {
+                System.out.print(" ");
+                System.out.print(board[i][j]);
+                if (j != rowLength - 1) {
+                    System.out.print(" |");
                 }
             }
-        } else {
-            for (int i = 0; i < board.length; i++) {
-                int rowLength = board[i].length;
+            System.out.println();
+            if (i != height - 1) {
                 for (int j = 0; j < rowLength; j++) {
-                    System.out.print(board[i][j]);
+                    System.out.print("---");
                     if (j != rowLength - 1) {
-                        System.out.print(" ");
+                        System.out.print("+");
                     }
                 }
                 System.out.println();
