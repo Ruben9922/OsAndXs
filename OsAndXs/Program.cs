@@ -6,7 +6,7 @@ namespace OsAndXs
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Board board = new Board(3);
         }
     }
 }
