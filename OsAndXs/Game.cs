@@ -31,6 +31,7 @@ namespace OsAndXs
             {
                 Player currentPlayer = players[moveCount % players.Length];
                 Console.WriteLine("{0}'s Turn", currentPlayer.Name);
+                Console.WriteLine(currentPlayer.Symbol);
                 Console.WriteLine();
                 
                 board.Display();
@@ -58,6 +59,7 @@ namespace OsAndXs
                 Console.Clear();
 
                 Console.WriteLine("{0}'s Turn", currentPlayer.Name);
+                Console.WriteLine(currentPlayer.Symbol);
                 Console.WriteLine();
 
                 board.Display();
