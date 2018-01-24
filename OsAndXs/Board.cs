@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace OsAndXs
 {
@@ -70,6 +69,129 @@ namespace OsAndXs
             }
         }
 
+        public BoardState ComputeBoardState()
+        {
+            if (ContainsWinningLines())
+            {
+                return BoardState.Win;
+            }
+            if (IsFull())
+            {
+                return BoardState.Draw;
+            }
+            return BoardState.Unfinished;
+        }
+
+        private bool ContainsWinningLines()
+        {
+            return ContainsWinningRows() || ContainsWinningColumns() || ContainsWinningDiagonals();
+        }
+
+        private bool ContainsWinningRows()
+        {
+            // Check for rows containing same symbol
+            for (int i = 0; i < Cells.GetLength(0); i++)
+            {
+                if (Cells.GetLength(1) < 1) continue;
+
+                char first = Cells[i, 0];
+                if (first == Blank) continue;
+
+                bool winning = true;
+                for (int j = 1; j < Cells.GetLength(1); j++)
+                {
+                    if (Cells[i, j] != first)
+                    {
+                        winning = false;
+                        break;
+                    }
+                }
+                if (winning)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool ContainsWinningColumns()
+        {
+            // Check for columns containing same symbol
+            for (int i = 0; i < Cells.GetLength(1); i++)
+            {
+                if (Cells.GetLength(0) < 1) continue;
+
+                char first = Cells[0, i];
+                if (first == Blank) continue;
+
+                bool winning = true;
+                for (int j = 1; j < Cells.GetLength(0); j++)
+                {
+                    if (Cells[j, i] != first)
+                    {
+                        winning = false;
+                        break;
+                    }
+                }
+                if (winning)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool ContainsWinningDiagonals()
+        {
+            if (Cells.GetLength(0) < 1 || Cells.GetLength(1) < 1) return false;
+
+            // Check for same symbol diagonally down
+            {
+                char first = Cells[0, 0];
+                if (first != Blank)
+                {
+                    bool winning = true;
+                    for (int i = 1; i < Math.Min(Cells.GetLength(0), Cells.GetLength(1)); i++)
+                    {
+                        if (Cells[i, i] != first)
+                        {
+                            winning = false;
+                        }
+                    }
+                    if (winning)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            // Check for same symbol diagonally up
+            {
+                char first = Cells[Cells.GetLength(0) - 1, 0];
+                if (first != Blank)
+                {
+                    bool winning = true;
+                    for (int i = 1; i < Math.Min(Cells.GetLength(0), Cells.GetLength(1)); i++)
+                    {
+                        if (Cells[Cells.GetLength(0) - 1 - i, i] != first)
+                        {
+                            winning = false;
+                        }
+                    }
+                    if (winning)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool IsFull()
+        {
+            return Cells.Cast<char>().All(cell => cell != Blank);
+        }
+
         public struct Coordinates
         {
             public int Row, Column;
@@ -79,6 +201,13 @@ namespace OsAndXs
                 this.Row = row;
                 this.Column = column;
             }
+        }
+
+        public enum BoardState
+        {
+            Win,
+            Draw,
+            Unfinished
         }
     }
 }

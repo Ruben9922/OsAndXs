@@ -27,7 +27,7 @@ namespace OsAndXs
             Console.Clear();
 
             int moveCount = 0;
-            while (true)
+            while (board.ComputeBoardState() == Board.BoardState.Unfinished)
             {
                 Player currentPlayer = players[moveCount % players.Length];
                 Console.WriteLine("{0}'s Turn", currentPlayer.Name);
