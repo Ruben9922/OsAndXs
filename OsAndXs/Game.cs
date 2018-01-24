@@ -20,6 +20,10 @@ namespace OsAndXs
             }
             Console.WriteLine();
 
+            Console.Write("Press any key to start the game...");
+            Console.ReadKey();
+            Console.Clear();
+
             board.Display();
             Console.WriteLine();
         }
