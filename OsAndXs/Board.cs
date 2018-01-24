@@ -6,12 +6,14 @@ namespace OsAndXs
 {
     class Board
     {
-        char[,] cells { get; set; }
+        public const char blank = ' ';
+
+        public char[,] cells { get; set; }
 
         public Board(int size)
         {
             cells = new char[size, size];
-            cells.Fill(' ');
+            cells.Fill(blank);
         }
 
         public void Display()

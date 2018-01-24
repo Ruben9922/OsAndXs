@@ -1,4 +1,6 @@
 ﻿using System;
+using Ruben9922.Utilities.ConsoleUtilities;
+
 namespace OsAndXs
 {
     public class Game
@@ -24,8 +26,41 @@ namespace OsAndXs
             Console.ReadKey();
             Console.Clear();
 
-            board.Display();
-            Console.WriteLine();
+            int moveCount = 0;
+            while (true)
+            {
+                Player currentPlayer = players[moveCount % players.Length];
+                Console.WriteLine("{0}'s Turn", currentPlayer.Name);
+                Console.WriteLine();
+                
+                board.Display();
+                Console.WriteLine();
+
+                Console.WriteLine("Enter coordinates of cell to fill");
+                bool valid;
+                do
+                {
+                    int row = ConsoleReadUtilities.ReadInt($"Row number [0-{board.cells.GetLength(0) - 1}]: ", 0, board.cells.GetLength(0), $"Row number must be between 0 and {board.cells.GetLength(0) - 1} (incl.)");
+                    int column = ConsoleReadUtilities.ReadInt($"Column number [0-{board.cells.GetLength(1) - 1}]: ", 0, board.cells.GetLength(1), $"Column number must be between 0 and {board.cells.GetLength(1) - 1} (incl.)");
+                    if (board.cells[row, column] == Board.blank)
+                    {
+                        board.cells[row, column] = currentPlayer.Symbol;
+                        valid = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Cell already filled; please choose an empty cell");
+                        valid = false;
+                    }
+                    Console.WriteLine();
+                } while (!valid);
+
+                Console.Write("Press any key to continue...");
+                Console.ReadKey();
+                Console.Clear();
+
+                moveCount++;
+            }
         }
 
         string GetPlayerName(int index)
