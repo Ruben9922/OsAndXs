@@ -45,6 +45,7 @@ namespace OsAndXs
                     if (board.Cells[row, column] == Board.Blank)
                     {
                         board.Cells[row, column] = currentPlayer.Symbol;
+                        board.LastCoordinates = new Board.Coordinates(row, column);
                         valid = true;
                     }
                     else
@@ -61,6 +62,8 @@ namespace OsAndXs
 
                 board.Display();
                 Console.WriteLine();
+
+                board.LastCoordinates = null;
 
                 Console.Write("Press any key to continue...");
                 Console.ReadKey();

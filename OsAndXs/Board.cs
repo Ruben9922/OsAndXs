@@ -8,7 +8,8 @@ namespace OsAndXs
     {
         public const char Blank = ' ';
 
-        public char[,] Cells { get; set; }
+        public char[,] Cells { get; }
+        public Coordinates? LastCoordinates { get; set; } = null;
 
         public Board(int size)
         {
@@ -37,7 +38,16 @@ namespace OsAndXs
                 for (int j = 0; j < Cells.GetLength(1); j++)
                 {
                     Console.Write(" ");
-                    Console.Write(Cells[i, j]);
+                    if (LastCoordinates.HasValue && LastCoordinates.Value.row == i && LastCoordinates.Value.column == j)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write(Cells[i, j]);
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        Console.Write(Cells[i, j]);
+                    }
                     if (j != Cells.GetLength(1) - 1)
                     {
                         Console.Write(" |");
@@ -57,6 +67,17 @@ namespace OsAndXs
                     }
                     Console.WriteLine();
                 }
+            }
+        }
+
+        public struct Coordinates
+        {
+            public int row, column;
+
+            public Coordinates(int row, int column)
+            {
+                this.row = row;
+                this.column = column;
             }
         }
     }
