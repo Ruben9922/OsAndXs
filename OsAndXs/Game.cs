@@ -54,6 +54,13 @@ namespace OsAndXs
                     }
                     Console.WriteLine();
                 } while (!valid);
+                Console.Clear();
+
+                Console.WriteLine("{0}'s Turn", currentPlayer.Name);
+                Console.WriteLine();
+
+                board.Display();
+                Console.WriteLine();
 
                 Console.Write("Press any key to continue...");
                 Console.ReadKey();
