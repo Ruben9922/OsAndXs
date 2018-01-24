@@ -40,11 +40,11 @@ namespace OsAndXs
                 bool valid;
                 do
                 {
-                    int row = ConsoleReadUtilities.ReadInt($"Row number [0-{board.cells.GetLength(0) - 1}]: ", 0, board.cells.GetLength(0), $"Row number must be between 0 and {board.cells.GetLength(0) - 1} (incl.)");
-                    int column = ConsoleReadUtilities.ReadInt($"Column number [0-{board.cells.GetLength(1) - 1}]: ", 0, board.cells.GetLength(1), $"Column number must be between 0 and {board.cells.GetLength(1) - 1} (incl.)");
-                    if (board.cells[row, column] == Board.blank)
+                    int row = ConsoleReadUtilities.ReadInt($"Row number [0-{board.Cells.GetLength(0) - 1}]: ", 0, board.Cells.GetLength(0), $"Row number must be between 0 and {board.Cells.GetLength(0) - 1} (incl.)");
+                    int column = ConsoleReadUtilities.ReadInt($"Column number [0-{board.Cells.GetLength(1) - 1}]: ", 0, board.Cells.GetLength(1), $"Column number must be between 0 and {board.Cells.GetLength(1) - 1} (incl.)");
+                    if (board.Cells[row, column] == Board.Blank)
                     {
-                        board.cells[row, column] = currentPlayer.Symbol;
+                        board.Cells[row, column] = currentPlayer.Symbol;
                         valid = true;
                     }
                     else
