@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Ruben9922.Utilities.ConsoleUtilities;
 
 namespace OsAndXs
 {
@@ -6,7 +8,8 @@ namespace OsAndXs
     {
         public static void Main(string[] args)
         {
-            Board board = new Board(3);
+            Game game = new Game();
+            game.Play();
         }
     }
 }
