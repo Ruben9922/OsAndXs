@@ -38,7 +38,7 @@ namespace OsAndXs
                 for (int j = 0; j < Cells.GetLength(1); j++)
                 {
                     Console.Write(" ");
-                    if (LastCoordinates.HasValue && LastCoordinates.Value.row == i && LastCoordinates.Value.column == j)
+                    if (LastCoordinates.HasValue && LastCoordinates.Value.Row == i && LastCoordinates.Value.Column == j)
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write(Cells[i, j]);
@@ -72,12 +72,12 @@ namespace OsAndXs
 
         public struct Coordinates
         {
-            public int row, column;
+            public int Row, Column;
 
             public Coordinates(int row, int column)
             {
-                this.row = row;
-                this.column = column;
+                this.Row = row;
+                this.Column = column;
             }
         }
     }
