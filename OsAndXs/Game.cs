@@ -8,21 +8,21 @@ namespace OsAndXs
 
         public void Play()
         {
-            Console.WriteLine("Os and Xs Game");
-            Console.WriteLine();
+            //Console.WriteLine("Os and Xs Game");
+            //Console.WriteLine();
 
-            Console.WriteLine("Number of players: 2");
-            for (int i = 0; i < players.Length; i++)
-            {
-                String name = GetPlayerName(i);
-                char symbol = GetPlayerSymbol(i, name);
-                players[i] = new Player(name, symbol);
-            }
-            Console.WriteLine();
+            //Console.WriteLine("Number of players: 2");
+            //for (int i = 0; i < players.Length; i++)
+            //{
+            //    String name = GetPlayerName(i);
+            //    char symbol = GetPlayerSymbol(i, name);
+            //    players[i] = new Player(name, symbol);
+            //}
+            //Console.WriteLine();
 
-            Console.Write("Press any key to start the game...");
-            Console.ReadKey();
-            Console.Clear();
+            //Console.Write("Press any key to start the game...");
+            //Console.ReadKey();
+            //Console.Clear();
 
             board.Display();
             Console.WriteLine();
