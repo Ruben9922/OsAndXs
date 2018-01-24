@@ -10,6 +10,9 @@ namespace OsAndXs
         {
             Game game = new Game();
             game.Play();
+
+            Console.Write("Press any key to exit...");
+            Console.ReadKey();
         }
     }
 }
