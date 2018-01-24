@@ -13,5 +13,19 @@ namespace OsAndXs
             cells = new char[size, size];
             cells.Fill(' ');
         }
+
+        public void Display()
+        {
+            Console.WriteLine("Board:");
+            for (int i = 0; i < cells.GetLength(0); i++)
+            {
+                for (int j = 0; j < cells.GetLength(1); j++)
+                {
+                    Console.Write(cells[i, j]);
+                    Console.Write(" ");
+                }
+                Console.WriteLine();
+            }
+        }
     }
 }

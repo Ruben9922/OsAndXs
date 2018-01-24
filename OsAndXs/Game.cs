@@ -18,6 +18,10 @@ namespace OsAndXs
                 char symbol = GetPlayerSymbol(i, name);
                 players[i] = new Player(name, symbol);
             }
+            Console.WriteLine();
+
+            board.Display();
+            Console.WriteLine();
         }
 
         string GetPlayerName(int index)
