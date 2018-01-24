@@ -11,7 +11,7 @@ namespace OsAndXs
         public Board(int size)
         {
             cells = new char[size, size];
-            cells.Fill('c');
+            cells.Fill(' ');
         }
 
         public void Display()
