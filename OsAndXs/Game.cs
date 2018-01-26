@@ -130,13 +130,12 @@ namespace OsAndXs
         {
             // Input player symbol
             // Check entered string has length of exactly one and is unique
-            string input;
             bool valid;
             char? symbol;
             do
             {
                 Console.Write("Enter symbol for {0}: ", playerName);
-                input = Console.ReadLine();
+                string input = Console.ReadLine();
                 if (input.Length == 1)
                 {
                     symbol = input[0];
