@@ -140,7 +140,7 @@ namespace OsAndXs
                 if (input.Length == 1)
                 {
                     symbol = input[0];
-                    valid = !Char.IsWhiteSpace(symbol.GetValueOrDefault()) && isPlayerSymbolUnique(index, symbol.GetValueOrDefault());
+                    valid = !Char.IsWhiteSpace(symbol.GetValueOrDefault()) && IsPlayerSymbolUnique(index, symbol.GetValueOrDefault());
                 }
                 else
                 {
@@ -151,7 +151,7 @@ namespace OsAndXs
             return symbol.GetValueOrDefault();
         }
 
-        bool isPlayerSymbolUnique(int index, char playerSymbol)
+        bool IsPlayerSymbolUnique(int index, char playerSymbol)
         {
             // Check if player symbol is unique using linear search on existing players (players with index than given index)
             for (int i = 0; i < Math.Min(index, players.Length); i++)
