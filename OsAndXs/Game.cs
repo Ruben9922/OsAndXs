@@ -27,10 +27,11 @@ namespace OsAndXs
             Console.Clear();
 
             int moveCount = 0;
+            Player currentPlayer;
             Board.BoardState boardState;
             do
             {
-                Player currentPlayer = players[moveCount % players.Length];
+                currentPlayer = players[moveCount % players.Length];
                 Console.WriteLine("{0}'s Turn", currentPlayer.Name);
                 Console.WriteLine(currentPlayer.Symbol);
                 Console.WriteLine();
@@ -76,6 +77,19 @@ namespace OsAndXs
 
                 moveCount++;
             } while (boardState == Board.BoardState.Unfinished);
+
+            // Display "game over" screen
+            Console.WriteLine("Game over!");
+            Console.WriteLine();
+            if (boardState == Board.BoardState.Win)
+            {
+                Console.WriteLine("{0} wins!", currentPlayer.Name);
+            }
+            else if (boardState == Board.BoardState.Draw)
+            {
+                Console.WriteLine("Draw!");
+            }
+            Console.WriteLine();
         }
 
         string GetPlayerName(int index)
