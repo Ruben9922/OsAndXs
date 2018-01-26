@@ -134,9 +134,31 @@ namespace OsAndXs
             char? symbol;
             do
             {
-                Console.Write("Enter symbol for {0}: ", playerName);
+                // TODO: Possibly improve this
+                if (index == 0)
+                {
+                    Console.Write("Enter symbol for {0} (leave blank for \"X\"): ", playerName);
+                }
+                else if (index == 1)
+                {
+                    Console.Write("Enter symbol for {0} (leave blank for \"O\"): ", playerName);
+                }
+                else
+                {
+                    Console.Write("Enter symbol for {0}: ", playerName);
+                }
                 string input = Console.ReadLine();
-                if (input.Length == 1)
+                if (input.Length == 0 && index == 0)
+                {
+                    symbol = 'X';
+                    valid = true;
+                }
+                else if (input.Length == 0 && index == 1)
+                {
+                    symbol = 'O';
+                    valid = true;
+                }
+                else if (input.Length == 1)
                 {
                     symbol = input[0];
                     valid = !Char.IsWhiteSpace(symbol.GetValueOrDefault()) && IsPlayerSymbolUnique(index, symbol.GetValueOrDefault());
