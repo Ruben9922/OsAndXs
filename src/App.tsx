@@ -168,7 +168,10 @@ function App() {
             key={`${rowIndex},${cellIndex}`}
             className={classNames(
               "h-20 w-20 flex items-center justify-center text-4xl",
-              {"cursor-pointer": state.status.type === "playing" && state.board[rowIndex][cellIndex] === null},
+              {
+                "cursor-pointer": state.status.type === "playing" && state.board[rowIndex][cellIndex] === null,
+                "text-blue-500 animate-pulse": state.status.type === "win" && R.includes([rowIndex, cellIndex], state.status.match),
+              },
             )}
             onClick={() => dispatch({ type: "take-turn", coords: [rowIndex, cellIndex] })}
           >
