@@ -39,17 +39,15 @@ function findMatch(board: Board): Point[] | null {
     [0, 1], // Horizontal
     [1, 0], // Vertical
     [1, 1], // Diagonally down
-    // [-1, 1], // Diagonally up
+    [-1, 1], // Diagonally up
   ];
 
   for (const direction of directions) {
-    // const rowIndex1 = Math.max(0, (matchLength * direction[0]) - 1);
-    // const rowIndex2 = 0;
-    const minRowIndex = 0;//Math.min(rowIndex1, rowIndex2);
-    const maxRowIndex = gridSize[0] - Math.max(1, matchLength * direction[0]);//Math.max(rowIndex1, rowIndex2);
+    const minRowIndex = Math.max(0, (matchLength * -direction[0]) - 1);
+    const maxRowIndex = gridSize[0] - Math.max(1, matchLength * direction[0]);
 
     for (let rowIndex = minRowIndex; rowIndex <= maxRowIndex; rowIndex++) {
-      const minColumnIndex = 0;
+      const minColumnIndex = Math.max(0, (matchLength * -direction[1]) - 1);
       const maxColumnIndex = gridSize[1] - Math.max(1, matchLength * direction[1]);
 
       for (let columnIndex = minColumnIndex; columnIndex <= maxColumnIndex; columnIndex++) {
