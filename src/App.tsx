@@ -3,6 +3,7 @@ import {useImmerReducer} from "use-immer";
 import * as R from "ramda";
 import { CgClose, CgShapeCircle } from "react-icons/cg";
 import {IconType} from "react-icons";
+import classNames from "classnames";
 
 type Point = [number, number];
 type Symbol = "X" | "O";
@@ -167,7 +168,10 @@ function App() {
         {state.board.map((row, rowIndex) => row.map((symbol, cellIndex) => (
           <div
             key={`${rowIndex},${cellIndex}`}
-            className="h-20 w-20 flex items-center justify-center text-4xl cursor-pointer"
+            className={classNames(
+              "h-20 w-20 flex items-center justify-center text-4xl",
+              {"cursor-pointer": state.status.type === "playing" && state.board[rowIndex][cellIndex] === null},
+            )}
             onClick={() => dispatch({ type: "take-turn", coords: [rowIndex, cellIndex] })}
           >
             {/*TODO: Will make this nicer soon!*/}
