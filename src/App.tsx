@@ -1,23 +1,14 @@
 import React from "react";
 import {useImmerReducer} from "use-immer";
 import * as R from "ramda";
-import { CgClose, CgShapeCircle } from "react-icons/cg";
-import {IconType} from "react-icons";
-import classNames from "classnames";
-
-type Point = [number, number];
-type Symbol = "X" | "O";
-type Board = (Symbol | null)[][];
-type Status =
-  | { type: "not-started" }
-  | { type: "playing", currentPlayer: Symbol }
-  // Technically win/draw data is not needed in the state as it can be computed from the board (which is also in the
-  // state), but it's just easier to put it in the state!
-  | { type: "win", match: Point[], winningPlayer: Symbol }
-  | { type: "draw" };
+import Board from "./Board";
+import BoardType from "./boardType";
+import Point from "./point";
+import Symbol, {symbolToIcon} from "./symbol";
+import Status from "./status";
 
 interface State {
-  board: Board;
+  board: BoardType;
   status: Status;
 }
 
@@ -28,13 +19,13 @@ type Action =
 const gridSize: Point = [3, 3];
 const matchLength: number = 3;
 
-const initialBoard: Board = R.repeat(R.repeat(null, gridSize[1]), gridSize[0]);
+const initialBoard: BoardType = R.repeat(R.repeat(null, gridSize[1]), gridSize[0]);
 const initialState: State = {
   board: initialBoard,
   status: { type: "not-started" },
 };
 
-function findMatch(board: Board): Point[] | null {
+function findMatch(board: BoardType): Point[] | null {
   const directions: Point[] = [
     [0, 1], // Horizontal
     [1, 0], // Vertical
@@ -85,7 +76,7 @@ function findMatch(board: Board): Point[] | null {
   return null;
 }
 
-function isBoardCompletelyFilled(board: Board): boolean {
+function isBoardCompletelyFilled(board: BoardType): boolean {
   return R.all(symbol => symbol !== null, R.flatten(board));
 }
 
@@ -126,15 +117,6 @@ function reducer(draft: State, action: Action): void {
   }
 }
 
-function symbolToIcon(symbol: Symbol): IconType {
-  switch (symbol) {
-    case "X":
-      return CgClose;
-    case "O":
-      return CgShapeCircle;
-  }
-}
-
 function App() {
   const [state, dispatch] = useImmerReducer(reducer, initialState);
 
@@ -162,24 +144,11 @@ function App() {
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-gray-700 gap-4">
       <p className="text-white justify-self-end">{statusText}</p>
-      <div className="border-2 border-gray-500 bg-gray-900 text-white grid grid-cols-3 grid-rows-3 gap-2 rounded-2xl shadow-2xl">
-        {state.board.map((row, rowIndex) => row.map((symbol, cellIndex) => (
-          <div
-            key={`${rowIndex},${cellIndex}`}
-            className={classNames(
-              "h-20 w-20 flex items-center justify-center text-4xl",
-              {
-                "cursor-pointer": state.status.type === "playing" && state.board[rowIndex][cellIndex] === null,
-                "text-blue-500 animate-pulse": state.status.type === "win" && R.includes([rowIndex, cellIndex], state.status.match),
-              },
-            )}
-            onClick={() => dispatch({ type: "take-turn", coords: [rowIndex, cellIndex] })}
-          >
-            {/*TODO: Will make this nicer soon!*/}
-            {symbol !== null && React.createElement(symbolToIcon(symbol), null)}
-          </div>
-        )))}
-      </div>
+      <Board
+        board={state.board}
+        takeTurn={point => dispatch({ type: "take-turn", coords: point })}
+        status={state.status}
+      />
       <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         onClick={() => dispatch({ type: "start-game" })}
