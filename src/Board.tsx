@@ -18,7 +18,7 @@ function Board({
   status,
 }: Props) {
   return (
-    <div className="border-2 border-gray-500 bg-gray-900 text-white grid grid-cols-3 grid-rows-3 gap-2 rounded-2xl shadow-2xl">
+    <div className="border-2 border-gray-500 bg-gray-900 grid grid-cols-3 grid-rows-3 gap-2 rounded-2xl shadow-2xl">
       {board.map((row, rowIndex) => row.map((symbol, cellIndex) => (
         <div
           key={`${rowIndex},${cellIndex}`}
