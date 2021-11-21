@@ -7,7 +7,7 @@ type View = "menu" | "game";
 
 function App() {
   const [view, setView] = useState<View>("menu");
-  const [gameMode, setGameMode] = useState<GameMode>("player-vs-player");
+  const [gameMode, setGameMode] = useState<GameMode>("player-vs-ai");
 
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-gray-700 gap-4 text-white">
@@ -15,7 +15,7 @@ function App() {
         <Menu gameMode={gameMode} setGameMode={setGameMode} startGame={() => setView("game")} />
       )}
       {view === "game" && (
-        <Game navigateToMenu={() => setView("menu")} />
+        <Game gameMode={gameMode} navigateToMenu={() => setView("menu")} />
       )}
     </div>
   );

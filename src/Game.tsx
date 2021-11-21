@@ -6,6 +6,7 @@ import BoardType from "./boardType";
 import Point from "./point";
 import Symbol, {symbolToIcon} from "./symbol";
 import Status from "./status";
+import GameMode from "./gameMode";
 
 interface State {
   board: BoardType;
@@ -14,7 +15,7 @@ interface State {
 
 type Action =
   | { type: "reset-game" }
-  | { type: "take-turn", coords: Point };
+  | { type: "take-turn", coords: Point, gameMode: GameMode };
 
 const gridSize: Point = [3, 3];
 const matchLength: number = 3;
@@ -84,31 +85,56 @@ function isBoardCompletelyFilled(board: BoardType): boolean {
 }
 
 function reducer(draft: State, action: Action): State | void {
+  const takeTurn = (coords: Point) => {
+    if (draft.status.type === "playing" && draft.board[coords[0]][coords[1]] === null) {
+      draft.board[coords[0]][coords[1]] = draft.status.currentPlayer;
+
+      const match = findMatch(draft.board);
+      if (match !== null) {
+        draft.status = {
+          type: "win",
+          winningPlayer: draft.status.currentPlayer,
+          match,
+        }
+      } else {
+        if (isBoardCompletelyFilled(draft.board)) {
+          draft.status = { type: "draw" };
+        } else {
+          if (draft.status.currentPlayer === "X") {
+            draft.status.currentPlayer = "O";
+          } else if (draft.status.currentPlayer === "O") {
+            draft.status.currentPlayer = "X";
+          }
+        }
+      }
+    }
+  };
+
+  const takeTurnAi = () => {
+    // TODO: Replace with actual AI; currently just randomly picks an empty cell
+    if (draft.status.type === "playing") {
+      let randomCoords: Point;
+      let isCellEmpty: boolean;
+      do {
+        randomCoords = [
+          Math.floor(Math.random() * gridSize[0]),
+          Math.floor(Math.random() * gridSize[1]),
+        ];
+        isCellEmpty = draft.board[randomCoords[0]][randomCoords[1]] === null;
+      } while (!isCellEmpty);
+
+      takeTurn(randomCoords);
+    }
+  };
+
   switch (action.type) {
     case "reset-game":
       return initialState();
     case "take-turn":
-      if (draft.status.type === "playing" && draft.board[action.coords[0]][action.coords[1]] === null) {
-        draft.board[action.coords[0]][action.coords[1]] = draft.status.currentPlayer;
+      takeTurn(action.coords);
 
-        const match = findMatch(draft.board);
-        if (match !== null) {
-          draft.status = {
-            type: "win",
-            winningPlayer: draft.status.currentPlayer,
-            match,
-          }
-        } else {
-          if (isBoardCompletelyFilled(draft.board)) {
-            draft.status = { type: "draw" };
-          } else {
-            if (draft.status.currentPlayer === "X") {
-              draft.status.currentPlayer = "O";
-            } else if (draft.status.currentPlayer === "O") {
-              draft.status.currentPlayer = "X";
-            }
-          }
-        }
+      if (action.gameMode === "player-vs-ai") {
+        takeTurnAi();
       }
 
       return;
@@ -116,10 +142,11 @@ function reducer(draft: State, action: Action): State | void {
 }
 
 interface Props {
+  gameMode: GameMode;
   navigateToMenu: () => void;
 }
 
-function Game({ navigateToMenu }: Props) {
+function Game({ gameMode, navigateToMenu }: Props) {
   const [state, dispatch] = useImmerReducer(reducer, initialState());
 
   let statusText: JSX.Element;
@@ -145,7 +172,7 @@ function Game({ navigateToMenu }: Props) {
       <p className="justify-self-end">{statusText}</p>
       <Board
         board={state.board}
-        takeTurn={point => dispatch({ type: "take-turn", coords: point })}
+        takeTurn={point => dispatch({ type: "take-turn", coords: point, gameMode })}
         status={state.status}
       />
       <div className="flex gap-2">

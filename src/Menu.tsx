@@ -11,20 +11,20 @@ function Menu({ gameMode, setGameMode, startGame }: Props) {
   return (
     <>
       <div className="flex gap-4">
-        {/*<label>*/}
-        {/*  <input*/}
-        {/*    type="radio"*/}
-        {/*    name="game-mode"*/}
-        {/*    value="player-vs-ai"*/}
-        {/*    checked={gameMode === "player-vs-ai"}*/}
-        {/*    onChange={event => {*/}
-        {/*      if (event.target.checked) {*/}
-        {/*        setGameMode(event.target.value as GameMode);*/}
-        {/*      }*/}
-        {/*    }}*/}
-        {/*  />*/}
-        {/*  <span className="ml-1">Player vs. AI</span>*/}
-        {/*</label>*/}
+        <label>
+          <input
+            type="radio"
+            name="game-mode"
+            value="player-vs-ai"
+            checked={gameMode === "player-vs-ai"}
+            onChange={event => {
+              if (event.target.checked) {
+                setGameMode(event.target.value as GameMode);
+              }
+            }}
+          />
+          <span className="ml-1">Player vs. AI</span>
+        </label>
         <label>
           <input
             type="radio"
