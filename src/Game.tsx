@@ -7,6 +7,7 @@ import Point from "./point";
 import Symbol, {symbolToIcon} from "./symbol";
 import Status from "./status";
 import GameMode from "./gameMode";
+import produce from "immer";
 
 interface State {
   board: BoardType;
@@ -17,6 +18,11 @@ type Action =
   | { type: "reset-game" }
   | { type: "take-turn", coords: Point, gameMode: GameMode };
 
+interface Match {
+  points: Point[];
+  symbol: Symbol;
+}
+
 const gridSize: Point = [3, 3];
 const matchLength: number = 3;
 
@@ -25,11 +31,11 @@ const initialState = (): State => ({
   board: initialBoard,
   status: {
     type: "playing",
-    currentPlayer: Math.random() >= 0.5 ? "X" : "O",
+    currentPlayer: "X",//Math.random() >= 0.5 ? "X" : "O",
   },
 });
 
-function findMatch(board: BoardType): Point[] | null {
+function findMatch(board: BoardType): Match | null {
   const directions: Point[] = [
     [0, 1], // Horizontal
     [1, 0], // Vertical
@@ -60,18 +66,21 @@ function findMatch(board: BoardType): Point[] | null {
         const isMatch: boolean = R.all(s => s !== null, lineSymbols)
           && R.reduce(
             (acc: {equal: boolean; prev: Symbol | null;}, elem: Symbol | null) => ({
-              equal: acc.equal && (acc.prev === null || elem === acc.prev),
+              equal: acc.prev === null || (acc.equal && elem === acc.prev),
               prev: elem
             }),
             {
               prev: null,
-              equal: true,
+              equal: false,
             },
             lineSymbols,
           )
             .equal;
         if (isMatch) {
-          return line;
+          return {
+            points: line,
+            symbol: R.head(lineSymbols)!,
+          };
         }
       }
     }
@@ -84,46 +93,107 @@ function isBoardCompletelyFilled(board: BoardType): boolean {
   return R.all(symbol => symbol !== null, R.flatten(board));
 }
 
+function getOpponent(player: Symbol): Symbol {
+  switch (player) {
+    case "X":
+      return "O";
+    case "O":
+      return "X";
+  }
+}
+
+function computeStatus(board: BoardType, currentPlayer: Symbol): Status {
+  const match = findMatch(board);
+  if (match !== null) {
+    return {
+      type: "win",
+      winningPlayer: match.symbol,
+      match: match.points,
+    }
+  } else {
+    if (isBoardCompletelyFilled(board)) {
+      return { type: "draw" };
+    } else {
+      return {
+        type: "playing",
+        currentPlayer: getOpponent(currentPlayer),
+      }
+    }
+  }
+}
+
+function computeScore(board: BoardType, currentPlayer: Symbol): number {
+  const result = computeStatus(board, currentPlayer);
+  if (result.type === "win" && result.winningPlayer === currentPlayer) {
+    return 10;
+  } else if (result.type === "win" && result.winningPlayer !== currentPlayer) {
+    return -10;
+  } else {
+    return 0;
+  }
+}
+
+interface Move {
+  point?: Point;
+  score: number;
+}
+
+function minimax(board: BoardType, currentPlayer: Symbol, aiPlayer: Symbol): Move {
+  if (computeStatus(board, currentPlayer).type !== "playing") {
+    return {
+      score: computeScore(board, aiPlayer),
+    };
+  }
+
+  const allPoints: Point[] = R.xprod(R.range(0, gridSize[0]), R.range(0, gridSize[1]));
+  const emptyPoints: Point[] = R.filter(point => board[point[0]][point[1]] === null, allPoints);
+  // const boardClone = R.clone(draft.board);
+  // if (draft.status.type === "playing") {
+  //   boardClone[point[0]][point[1]] = draft.status.currentPlayer;
+  // }
+  // return {
+  //   board: draft.board,
+  // };
+  // return {
+  //   board: draft.status.type === "playing"
+  //     ? R.set(R.lensPath(point), draft.status.currentPlayer, draft.board)
+  //     : draft.board,
+  // };
+  // const newStates: BoardType[] = R.map(point => , );
+  // For each of the available moves,
+  const moves: Move[] = R.map(point => {
+    const newBoard = produce(board, draftBoard => {
+      draftBoard[point[0]][point[1]] = currentPlayer;
+    })
+
+    return ({
+      point,
+      score: minimax(newBoard, getOpponent(currentPlayer), aiPlayer).score,
+    });
+  }, emptyPoints);
+
+  if (currentPlayer === aiPlayer) {
+    return R.reduce(R.maxBy((move: Move) => move.score), {score: -Infinity}, moves);
+  } else {
+    return R.reduce(R.minBy((move: Move) => move.score), {score: Infinity}, moves);
+  }
+}
+
 function reducer(draft: State, action: Action): State | void {
   const takeTurn = (coords: Point) => {
     if (draft.status.type === "playing" && draft.board[coords[0]][coords[1]] === null) {
       draft.board[coords[0]][coords[1]] = draft.status.currentPlayer;
 
-      const match = findMatch(draft.board);
-      if (match !== null) {
-        draft.status = {
-          type: "win",
-          winningPlayer: draft.status.currentPlayer,
-          match,
-        }
-      } else {
-        if (isBoardCompletelyFilled(draft.board)) {
-          draft.status = { type: "draw" };
-        } else {
-          if (draft.status.currentPlayer === "X") {
-            draft.status.currentPlayer = "O";
-          } else if (draft.status.currentPlayer === "O") {
-            draft.status.currentPlayer = "X";
-          }
-        }
-      }
+      draft.status = computeStatus(draft.board, draft.status.currentPlayer);
     }
   };
 
-  const takeTurnAi = () => {
-    // TODO: Replace with actual AI; currently just randomly picks an empty cell
+  const takeTurnAi = (): void => {
     if (draft.status.type === "playing") {
-      let randomCoords: Point;
-      let isCellEmpty: boolean;
-      do {
-        randomCoords = [
-          Math.floor(Math.random() * gridSize[0]),
-          Math.floor(Math.random() * gridSize[1]),
-        ];
-        isCellEmpty = draft.board[randomCoords[0]][randomCoords[1]] === null;
-      } while (!isCellEmpty);
-
-      takeTurn(randomCoords);
+      const move = minimax(draft.board, draft.status.currentPlayer, "O");
+      if (move.point !== undefined) {
+        takeTurn(move.point);
+      }
     }
   };
 
