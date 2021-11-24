@@ -147,19 +147,6 @@ function minimax(board: BoardType, currentPlayer: Symbol, aiPlayer: Symbol): Mov
 
   const allPoints: Point[] = R.xprod(R.range(0, gridSize[0]), R.range(0, gridSize[1]));
   const emptyPoints: Point[] = R.filter(point => board[point[0]][point[1]] === null, allPoints);
-  // const boardClone = R.clone(draft.board);
-  // if (draft.status.type === "playing") {
-  //   boardClone[point[0]][point[1]] = draft.status.currentPlayer;
-  // }
-  // return {
-  //   board: draft.board,
-  // };
-  // return {
-  //   board: draft.status.type === "playing"
-  //     ? R.set(R.lensPath(point), draft.status.currentPlayer, draft.board)
-  //     : draft.board,
-  // };
-  // const newStates: BoardType[] = R.map(point => , );
   // For each of the available moves,
   const moves: Move[] = R.map(point => {
     const newBoard = produce(board, draftBoard => {
