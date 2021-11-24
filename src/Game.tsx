@@ -12,6 +12,7 @@ import produce from "immer";
 interface State {
   board: BoardType;
   status: Status;
+  firstPlayer: Symbol;
 }
 
 type Action =
@@ -27,13 +28,17 @@ const gridSize: Point = [3, 3];
 const matchLength: number = 3;
 
 const initialBoard: BoardType = R.repeat(R.repeat(null, gridSize[1]), gridSize[0]);
-const initialState = (): State => ({
-  board: initialBoard,
-  status: {
-    type: "playing",
-    currentPlayer: "X",//Math.random() >= 0.5 ? "X" : "O",
-  },
-});
+const initialState = (): State => {
+  const firstPlayer = Math.random() >= 0.5 ? "X" : "O";
+  return ({
+    board: initialBoard,
+    status: {
+      type: "playing",
+      currentPlayer: firstPlayer,
+    },
+    firstPlayer,
+  });
+};
 
 function findMatch(board: BoardType): Match | null {
   const directions: Point[] = [
@@ -177,7 +182,7 @@ function reducer(draft: State, action: Action): State | void {
 
   const takeTurnAi = (): void => {
     if (draft.status.type === "playing") {
-      const move = minimax(draft.board, draft.status.currentPlayer, "O");
+      const move = minimax(draft.board, draft.status.currentPlayer, getOpponent(draft.firstPlayer));
       if (move.point !== undefined) {
         takeTurn(move.point);
       }
