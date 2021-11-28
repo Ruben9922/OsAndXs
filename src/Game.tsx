@@ -127,12 +127,18 @@ function computeStatus(board: BoardType, currentPlayer: Symbol): Status {
   }
 }
 
-function computeScore(board: BoardType, currentPlayer: Symbol): number {
+function computeScore(board: BoardType, currentPlayer: Symbol, depth: number): number {
   const result = computeStatus(board, currentPlayer);
+  // Score takes depth (number of moves to end the game) into account, in addition to the result (win/lose/draw)
+  // For example, a win in 1 more move (score of 9) is better than a win in 9 more moves (score of 1)
+  // A loss in 9 more moves (score: -1) is better than a loss in 1 more move (score: -9)
+  // Any win is better than a draw, and a draw is better than any loss
+  // Also, the number 10 is used presumably because it's greater than the maximum number of moves in a game (9)
+  // This ensures that each outcome has a unique score
   if (result.type === "win" && result.winningPlayer === currentPlayer) {
-    return 10;
+    return 10 - depth;
   } else if (result.type === "win" && result.winningPlayer !== currentPlayer) {
-    return -10;
+    return depth - 10;
   } else {
     return 0;
   }
@@ -143,10 +149,10 @@ interface Move {
   score: number;
 }
 
-function minimax(board: BoardType, currentPlayer: Symbol, aiPlayer: Symbol): Move {
+function minimax(board: BoardType, currentPlayer: Symbol, aiPlayer: Symbol, depth: number): Move {
   if (computeStatus(board, currentPlayer).type !== "playing") {
     return {
-      score: computeScore(board, aiPlayer),
+      score: computeScore(board, aiPlayer, depth),
     };
   }
 
@@ -160,7 +166,7 @@ function minimax(board: BoardType, currentPlayer: Symbol, aiPlayer: Symbol): Mov
 
     return ({
       point,
-      score: minimax(newBoard, getOpponent(currentPlayer), aiPlayer).score,
+      score: minimax(newBoard, getOpponent(currentPlayer), aiPlayer, depth + 1).score,
     });
   }, emptyPoints);
 
@@ -182,7 +188,7 @@ function reducer(draft: State, action: Action): State | void {
 
   const takeTurnAi = (): void => {
     if (draft.status.type === "playing") {
-      const move = minimax(draft.board, draft.status.currentPlayer, getOpponent(draft.firstPlayer));
+      const move = minimax(draft.board, draft.status.currentPlayer, getOpponent(draft.firstPlayer), 0);
       if (move.point !== undefined) {
         takeTurn(move.point);
       }
