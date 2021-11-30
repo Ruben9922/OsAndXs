@@ -9,7 +9,10 @@ interface Props {
 
 function Menu({ gameMode, setGameMode, startGame }: Props) {
   return (
-    <>
+    <div className="flex flex-col items-center gap-5">
+      <h1 className="text-4xl">
+        Tic-Tac-Toe
+      </h1>
       <div className="flex gap-4">
         <label>
           <input
@@ -46,7 +49,7 @@ function Menu({ gameMode, setGameMode, startGame }: Props) {
       >
         Start game
       </button>
-    </>
+    </div>
   );
 }
 
